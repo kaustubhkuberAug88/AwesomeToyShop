@@ -1,0 +1,79 @@
+<div class="card">
+  <div class="card-header">
+    {{pageTitle}}
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-2">Filter by:</div>
+      <div class="col-md-4">
+        <input type="text"
+               [(ngModel)]="listFilter" />
+      </div>
+    </div>
+    <div class="row"
+         *ngIf="listFilter">
+      <div class="col-md-6">
+        <h4>Filtered by: {{listFilter}}</h4>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table mb-0"
+             *ngIf="toys && toys.length">
+        <thead>
+          <tr>
+            <th>
+              <button class="btn btn-outline-primary btn-sm"
+                      (click)="toggleImage()">
+                {{showImage ? "Hide" : "Show"}} Image
+              </button>
+            </th>
+            <th>Toy Name</th>
+            <th>Toy Code</th>
+            <th>Available</th>
+            <th>Price</th>
+            <th>5 Star Rating</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let toy of filteredToys">
+            <td>
+              <img *ngIf="showImage && toy.imageUrl"
+                   [src]="toy.imageUrl"
+                   [title]="toy.toyName"
+                   [style.width.px]="imageWidth"
+                   [style.margin.px]="imageMargin">
+            </td>
+            <td>
+              <a [routerLink]="['/toys', toy.id]"
+                 [queryParams]="{filterBy: listFilter, showImage: showImage}">
+                {{ toy.toyName }}
+              </a>
+            </td>
+            <td>{{ toy.toyCode }}</td>
+            <td>{{ toy.releaseDate }}</td>
+            <td>{{ toy.price | currency:"INR":"symbol":"1.2-2" }}</td>
+            <td>
+              <pm-star [rating]="toy.starRating">
+              </pm-star>
+            </td>
+            <td>
+              <button class="btn btn-outline-primary btn-sm"
+                      [routerLink]="['/toys', toy.id, 'edit']">
+                Edit
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="errorMessage"
+     class="alert alert-danger">
+  Error: {{ errorMessage }}
+</div>
